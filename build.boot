@@ -22,9 +22,9 @@
    [samestep/boot-refresh "0.1.0"]
 
    ; transitive deps...
-   [doo "0.1.8"]
+   [doo "0.1.9"]
 
-   [adzerk/boot-test "1.2.0" :scope "test"]
+   ; [adzerk/boot-test "1.2.0" :scope "test"]
    [crisptrutski/boot-cljs-test "0.3.5-SNAPSHOT" :scope "test"]
 
    ; everything else...
@@ -61,7 +61,7 @@
     :file-min "lib/dagre/0.8.2/dagre.min.js"
     :provides ["dagre.lib"]}
    ; cytoscape
-   {:file "lib/cytcoscape/3.2.17/cytoscape.js"
+   {:file "lib/cytoscape/3.2.17/cytoscape.js"
     :file-min "lib/cytoscape/3.2.17/cytoscape.min.js"
     :provides ["cytoscape.lib"]}]})
 ;
@@ -149,18 +149,12 @@
    identity)
   (test-cljs
    :exit? (not watch?)
-   ; :js-env :chrome
+   :js-env :phantom
    :optimizations (or (keyword optimizations) :none)
-   :cljs-opts compiler-options
-   :namespaces [#".*"])))
-
-(replace-task!
- [t test-cljs]
- (fn [& xs]
-  (apply t
    :cljs-opts
    (merge
     compiler-options
-    {:load-tests true
-     :process-shim false})
-   xs)))
+    {:load-tests true})
+     ; :process-shim false})
+   :namespaces [#".*"]
+   :exclusions [#"styles.compile"])))

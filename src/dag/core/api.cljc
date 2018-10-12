@@ -1,6 +1,7 @@
 (ns dag.core.api
  (:require
-  [cljs.test :refer-macros [deftest is]]))
+  [clojure.test :refer [deftest is]]
+  dag.core.data))
 
 (defn items->elements
  [items & {:keys [id-fn targets-fn]}]
@@ -16,9 +17,10 @@
           {:data {:id id}}
           (map
            (fn [target]
-            {:data (str id target)
-             :source id
-             :target target})
+            {:data
+             {:id (str id target)
+              :source (str id)
+              :target (str target)}})
            targets)]))]
   (flatten
    (map
@@ -26,3 +28,12 @@
     items))))
 
 ; TESTS
+
+(deftest ??items->elements
+  (is
+   (=
+    dag.core.data/example-elements
+    (items->elements
+     dag.core.data/example-items
+     :id-fn :id
+     :targets-fn :targets))))

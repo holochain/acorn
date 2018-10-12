@@ -6,3 +6,5 @@ exit
 (clojure.pprint/pprint (dag.core.api/items->elements data :id-fn :id :targets-fn :targets))
 (clojure.pprint/pprint (dag.core.api/items->elements data :id-fn :id))
 (clojure.pprint/pprint (dag.core.api/items->elements data :id-fn :id :targets-fn :targets))
+data
+exit
