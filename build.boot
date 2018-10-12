@@ -30,7 +30,8 @@
    ; everything else...
    [thedavidmeister/hoplon-elem-lib "0.2.0"]
    [thedavidmeister/wheel "0.3.6"]
-   [garden "1.3.6"]])
+   [garden "1.3.6"]
+   [thedavidmeister/hoplon-auth0 "0.3.0"]])
 
 (task-options!
  pom {:project project
@@ -49,21 +50,24 @@
  'garden.core
  'styles.compile
  '[adzerk.boot-reload :refer [reload]]
- '[samestep.boot-refresh :refer [refresh]])
+ '[samestep.boot-refresh :refer [refresh]]
+ 'hoplon-auth0.compile)
 
 (bootlaces! version)
 
 (def compiler-options
- {:foreign-libs
-  [
-   ; dagre
-   {:file "lib/dagre/0.8.2/dagre.js"
-    :file-min "lib/dagre/0.8.2/dagre.min.js"
-    :provides ["dagre.lib"]}
-   ; cytoscape
-   {:file "lib/cytoscape/3.2.17/cytoscape.js"
-    :file-min "lib/cytoscape/3.2.17/cytoscape.min.js"
-    :provides ["cytoscape.lib"]}]})
+ (->
+  {:foreign-libs
+   [
+    ; dagre
+    {:file "lib/dagre/0.8.2/dagre.js"
+     :file-min "lib/dagre/0.8.2/dagre.min.js"
+     :provides ["dagre.lib"]}
+    ; cytoscape
+    {:file "lib/cytoscape/3.2.17/cytoscape.js"
+     :file-min "lib/cytoscape/3.2.17/cytoscape.min.js"
+     :provides ["cytoscape.lib"]}]}
+  hoplon-auth0.compile/with-closure-defines))
 ;
 ; (def test-cljs-compiler-options
 ;  (partial cljs-compiler-options "test-runner" {:load-tests true

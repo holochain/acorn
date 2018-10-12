@@ -6,7 +6,8 @@
   typography.hoplon
   layout.hoplon
   color.data
-  dag.vis.hoplon))
+  dag.vis.hoplon
+  auth.hoplon))
 
 (h/html
  (h/head
@@ -22,4 +23,5 @@
     (layout.hoplon/spacer:section)
     (h/h1 "Acorn proto")
     (dag.vis.hoplon/vis)
+    (auth.hoplon/login)
     (layout.hoplon/spacer:section)))))
