@@ -4,7 +4,7 @@
   dag.core.data))
 
 (defn items->elements
- [items & {:keys [id-fn targets-fn]}]
+ [& {:keys [id-fn targets-fn items]}]
  {:pre [id-fn targets-fn]}
  (let [item->id-targets
        (fn [item]
@@ -34,6 +34,6 @@
    (=
     dag.core.data/example-elements
     (items->elements
-     dag.core.data/example-items
+     :items dag.core.data/example-items
      :id-fn :id
      :targets-fn :targets))))

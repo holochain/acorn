@@ -3,19 +3,29 @@
   [hoplon.core :as h]
   [javelin.core :as j]
   dag.core.api
-  cytoscape.lib))
+  cytoscape.lib
+  color.data))
+
+(defn with-cytoscape!
+ [el options]
+ (.log js/console (clj->js options))
+ (h/with-dom el
+  (js/cytoscape (clj->js (merge {:container el} options))))
+ el)
 
 (defn vis
  []
- (j/with-let [el (h/div
-                  :css {:height "100px"
-                        :width "100px"})]
-  (let [elements (dag.core.api/items->elements
-                  dag.core.data/example-items
-                  :id-fn :id
-                  :targets-fn :targets)]
-   (h/with-dom el
-    (js/cytoscape
-     (clj->js
-      {:container el
-       :elements elements}))))))
+ (let [items->elements (partial dag.core.api/items->elements :id-fn :id :targets-fn :targets)
+       elements (items->elements :items dag.core.data/example-items)]
+  (with-cytoscape!
+   (h/div
+    :css
+    {:height "100px"
+     :width "100px"})
+   {:elements elements
+    :style
+    [
+     {:selector :node
+      :style {:background-color color.data/background}}
+     {:selector :edge
+      :style {:line-color color.data/background}}]})))
