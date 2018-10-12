@@ -5,7 +5,8 @@
   font.hoplon
   typography.hoplon
   layout.hoplon
-  color.data))
+  color.data
+  dag.vis.hoplon))
 
 (h/html
  (h/head
@@ -20,4 +21,5 @@
           :padding "0 20px"}
     (layout.hoplon/spacer:section)
     (h/h1 "Acorn proto")
+    (dag.vis.hoplon/vis)
     (layout.hoplon/spacer:section)))))

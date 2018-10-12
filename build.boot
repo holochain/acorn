@@ -17,13 +17,15 @@
    [adzerk/boot-cljs "2.1.4"]
    [tailrecursion/boot-jetty  "0.1.3"]
    [thedavidmeister/boot-github-pages "0.1.0-SNAPSHOT"]
-   [crisptrutski/boot-cljs-test "0.3.5-SNAPSHOT"]
    [adzerk/bootlaces "0.1.13"]
    [com.taoensso/timbre "4.10.0"]
    [samestep/boot-refresh "0.1.0"]
 
    ; transitive deps...
    [doo "0.1.8"]
+
+   [adzerk/boot-test "1.2.0" :scope "test"]
+   [crisptrutski/boot-cljs-test "0.3.5-SNAPSHOT" :scope "test"]
 
    ; everything else...
    [thedavidmeister/hoplon-elem-lib "0.2.0"]
@@ -57,7 +59,15 @@
    ; dagre
    {:file "lib/dagre/0.8.2/dagre.js"
     :file-min "lib/dagre/0.8.2/dagre.min.js"
-    :provides ["dagre.lib"]}]})
+    :provides ["dagre.lib"]}
+   ; cytoscape
+   {:file "lib/cytcoscape/3.2.17/cytoscape.js"
+    :file-min "lib/cytoscape/3.2.17/cytoscape.min.js"
+    :provides ["cytoscape.lib"]}]})
+;
+; (def test-cljs-compiler-options
+;  (partial cljs-compiler-options "test-runner" {:load-tests true
+;                                                :process-shim false}))
 
 ; Adapted from https://github.com/martinklepsch/boot-garden
 ; Dramatically faster ~15x than the approach with pods which seems to cause CLJS
@@ -114,3 +124,43 @@
  []
  (comp
   (deploy-gh-pages)))
+
+(deftask repl-server
+ []
+ (comp
+  (watch)
+  (refresh)
+  (repl :server true)))
+
+(deftask repl-client
+ []
+ (repl :client true))
+
+(deftask tests-cljs
+ "Run all the CLJS tests"
+ [w watch? bool "Watches the filesystem and reruns tests when changes are made."
+  o optimizations OPTIMIZATIONS str "Sets the optimizations level for cljs"]
+ ; Run the JS tests
+ (comp
+  (if watch?
+   (comp
+    (watch)
+    (speak :theme "woodblock"))
+   identity)
+  (test-cljs
+   :exit? (not watch?)
+   ; :js-env :chrome
+   :optimizations (or (keyword optimizations) :none)
+   :cljs-opts compiler-options
+   :namespaces [#".*"])))
+
+(replace-task!
+ [t test-cljs]
+ (fn [& xs]
+  (apply t
+   :cljs-opts
+   (merge
+    compiler-options
+    {:load-tests true
+     :process-shim false})
+   xs)))

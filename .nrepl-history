@@ -1,0 +1,8 @@
+exit
+(require 'dag.core.api)
+(def data [{:id :foo :targets [:bar :baz]} {:id :bar} {:id :baz :targets [:foo]}])
+(dag.core.api/items->elements data)
+(dag.core.api/items->elements data :id-fn :id :targets-fn :targets)
+(clojure.pprint/pprint (dag.core.api/items->elements data :id-fn :id :targets-fn :targets))
+(clojure.pprint/pprint (dag.core.api/items->elements data :id-fn :id))
+(clojure.pprint/pprint (dag.core.api/items->elements data :id-fn :id :targets-fn :targets))
