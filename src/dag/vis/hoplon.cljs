@@ -10,15 +10,16 @@
 
 (defn with-cytoscape!
  [el elements= options]
- (.log js/console (clj->js options))
- (let [ready? (j/cell false)
-       cy (js/cytoscape (clj->js (merge {:container el} options)))]
+ (let [ready? (j/cell false)]
   (h/with-dom el (reset! ready? true))
   (j/formula-of [ready? elements=]
-   (when (and ready? (seq elements=))
-    (.remove (.elements cy))
-    (.add cy (clj->js elements=))
-    (.run (.layout cy (clj->js {:name :dagre})))))
+   (js/cytoscape (clj->js (merge {:container el :elements elements=} options))))
+  ; this needs work to get the layout and positioning right
+  ; (j/formula-of [ready? elements=]
+  ;  (when (and ready? (seq elements=))
+  ;   (.remove (.elements cy))
+  ;   (.add cy (clj->js elements=))
+  ;   (.run (.layout cy (clj->js {:name :dagre})))))
   el))
 
 (defn vis
