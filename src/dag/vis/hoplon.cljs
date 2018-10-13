@@ -11,18 +11,23 @@
 (defn with-cytoscape!
  [el elements= options]
  (.log js/console (clj->js options))
- (let [ready? (j/cell false)]
+ (let [ready? (j/cell false)
+       cy (js/cytoscape (clj->js (merge {:container el} options)))]
   (h/with-dom el (reset! ready? true))
   (j/formula-of [ready? elements=]
    (when (and ready? (seq elements=))
-    (js/cytoscape (clj->js (merge {:container el :elements elements=} options)))))
+    (.log js/console (.elements cy))
+    (prn elements=)
+    (.remove (.elements cy))
+    (.add cy (clj->js elements=))
+    (.run (.layout cy (clj->js {:name :dagre})))))
   el))
 
 (defn vis
  []
  (let [
-       id :number
-       label :title
+       id (comp str :number)
+       label (comp str :title)
        targets (fn [s]
                 (map
                  #(clojure.string/replace % "child of #" "")
