@@ -16,8 +16,6 @@
   (h/with-dom el (reset! ready? true))
   (j/formula-of [ready? elements=]
    (when (and ready? (seq elements=))
-    (.log js/console (.elements cy))
-    (prn elements=)
     (.remove (.elements cy))
     (.add cy (clj->js elements=))
     (.run (.layout cy (clj->js {:name :dagre})))))
