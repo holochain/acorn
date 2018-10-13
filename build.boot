@@ -66,7 +66,11 @@
     ; cytoscape
     {:file "lib/cytoscape/3.2.17/cytoscape.js"
      :file-min "lib/cytoscape/3.2.17/cytoscape.min.js"
-     :provides ["cytoscape.lib"]}]}
+     :provides ["cytoscape.lib"]}
+    ; cytoscape-dagre
+    {:file "lib/cytoscape-dagre/2.2.2/cytoscape-dagre.js"
+     :provides ["cytoscape-dagre.lib"]
+     :requires ["cytoscape.lib" "dagre.lib"]}]}
   hoplon-auth0.compile/with-closure-defines))
 ;
 ; (def test-cljs-compiler-options

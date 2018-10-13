@@ -5,7 +5,8 @@
   dag.core.api
   cytoscape.lib
   color.data
-  github.issues))
+  github.issues
+  cytoscape-dagre.lib))
 
 (defn with-cytoscape!
  [el elements= options]
@@ -29,7 +30,6 @@
        items->elements (partial dag.core.api/items->elements :id-fn id :targets-fn targets :label-fn label)
        issues= (github.issues/issues=)
        elements= (j/cell= (items->elements :items issues=))]
-  (j/cell= (prn elements=))
 
   (with-cytoscape!
    (h/div
@@ -37,7 +37,7 @@
     {:height "1000px"
      :width "300px"})
    elements=
-   {:layout {:name :cose}
+   {:layout {:name :dagre}
     :style
     [
      {:selector :node
