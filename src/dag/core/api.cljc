@@ -4,27 +4,27 @@
   dag.core.data))
 
 (defn items->elements
- [& {:keys [id-fn targets-fn items]}]
+ [& {:keys [id-fn targets-fn items label-fn]}]
  {:pre [id-fn targets-fn]}
- (let [item->id-targets
+ (let [
+       item->elements
        (fn [item]
-        ((juxt id-fn targets-fn) item))
-
-       id-targets->elements
-       (fn [[id targets]]
-        (flatten
-         [
-          {:data {:id id}}
-          (map
-           (fn [target]
-            {:data
-             {:id (str id target)
-              :source (str id)
-              :target (str target)}})
-           targets)]))]
+        (let [id (id-fn item)]
+         (flatten
+          [
+           {:data
+            {:id id
+             :label (label-fn item)}}
+           (map
+            (fn [target]
+             {:data
+              {:id (str id target)
+               :source (str id)
+               :target (str target)}})
+            (targets-fn item))])))]
   (flatten
    (map
-    (comp id-targets->elements item->id-targets)
+    item->elements
     items))))
 
 ; TESTS

@@ -4,28 +4,48 @@
   [javelin.core :as j]
   dag.core.api
   cytoscape.lib
-  color.data))
+  color.data
+  github.issues))
 
 (defn with-cytoscape!
- [el options]
+ [el elements= options]
  (.log js/console (clj->js options))
- (h/with-dom el
-  (js/cytoscape (clj->js (merge {:container el} options))))
- el)
+ (let [ready? (j/cell false)]
+  (h/with-dom el (reset! ready? true))
+  (j/formula-of [ready? elements=]
+   (when (and ready? (seq elements=))
+    (js/cytoscape (clj->js (merge {:container el :elements elements=} options)))))
+  el))
 
 (defn vis
  []
- (let [items->elements (partial dag.core.api/items->elements :id-fn :id :targets-fn :targets)
-       elements (items->elements :items dag.core.data/example-items)]
+ (let [
+       id :number
+       label :title
+       targets (fn [s]
+                (map
+                 #(clojure.string/replace % "child of #" "")
+                 (re-seq #"child of #[0-9]+" (str s))))
+       items->elements (partial dag.core.api/items->elements :id-fn id :targets-fn targets :label-fn label)
+       issues= (github.issues/issues=)
+       elements= (j/cell= (items->elements :items issues=))]
+  (j/cell= (prn elements=))
+
   (with-cytoscape!
    (h/div
     :css
-    {:height "100px"
-     :width "100px"})
-   {:elements elements
+    {:height "1000px"
+     :width "300px"})
+   elements=
+   {:layout {:name :cose}
     :style
     [
      {:selector :node
-      :style {:background-color color.data/background}}
+      :style {:background-color color.data/background
+              :content "data(label)"
+              :color color.data/highlight}}
      {:selector :edge
-      :style {:line-color color.data/background}}]})))
+      :style {:line-color color.data/background
+              :source-arrow-shape "triangle"
+              :curve-style :bezier
+              :source-arrow-color color.data/background}}]})))
