@@ -19,6 +19,7 @@
               (js/fetch "https://api.github.com/repos/holochain/acorn-example/issues" init)
               (fn [response] (.json response)))
              (fn [json]
-              (reset! c (js->clj json :keywordize-keys true))
-              (h/with-timeout 10000 (f))))))]
+              (reset! c (js->clj json :keywordize-keys true))))))]
+              ; blowing away elements is not that graceful in cytoscape
+              ; (h/with-timeout 30000 (f))))))]
    (f))))

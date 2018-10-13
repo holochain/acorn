@@ -9,7 +9,7 @@
   attributes
   children
   :css {:margin "0 auto"
-        :max-width "500px"}))
+        :max-width "800px"}))
 
 (defn spacer:section
  []

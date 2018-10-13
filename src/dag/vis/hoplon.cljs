@@ -39,8 +39,8 @@
   (with-cytoscape!
    (h/div
     :css
-    {:height "1000px"
-     :width "300px"})
+    {:height "800px"
+     :width "800px"})
    elements=
    {:layout {:name :dagre}
     :style
